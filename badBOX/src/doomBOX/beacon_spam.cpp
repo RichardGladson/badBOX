@@ -11,11 +11,11 @@
 
 #include <string.h>
 
-#include "beacon_spam.h"
-#include "display_mirror.h"
-#include "radio_manager.h"
-#include "setting.h"
-#include "sleep_manager.h"
+#include "../include/beacon_spam.h"
+#include "../include/display_mirror.h"
+#include "../include/radio_manager.h"
+#include "../include/setting.h"
+#include "../include/sleep_manager.h"
 #include "esp_event.h"
 #include "esp_wifi.h"
 

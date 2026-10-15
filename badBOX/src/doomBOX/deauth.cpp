@@ -9,12 +9,12 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "deauth.h"
-#include "radio_manager.h"
-#include "sleep_manager.h"
-#include "pindefs.h"
-#include "display_mirror.h"
-#include "setting.h"
+#include "../include/deauth.h"
+#include "../include/radio_manager.h"
+#include "../include/sleep_manager.h"
+#include "../include/pindefs.h"
+#include "../include/display_mirror.h"
+#include "../include/setting.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
 

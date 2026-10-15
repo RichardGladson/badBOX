@@ -2,7 +2,7 @@
  * DOOMBOX Protocol implementation (Core side)
  */
 
-#include "reaper_protocol.h"
+#include "../include/reaper_protocol.h"
 #include <string.h>
 
 namespace Protocol {

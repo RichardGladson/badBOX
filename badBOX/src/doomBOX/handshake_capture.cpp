@@ -10,12 +10,12 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "handshake_capture.h"
-#include "radio_manager.h"
-#include "sleep_manager.h"
-#include "pindefs.h"
-#include "display_mirror.h"
-#include "setting.h"
+#include "../include/handshake_capture.h"
+#include "../include/radio_manager.h"
+#include "../include/sleep_manager.h"
+#include "../include/pindefs.h"
+#include "../include/display_mirror.h"
+#include "../include/setting.h"
 #include <EEPROM.h>
 #include <string.h>
 #include <stdio.h>

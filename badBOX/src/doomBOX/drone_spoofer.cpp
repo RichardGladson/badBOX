@@ -12,16 +12,16 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "drone_spoofer.h"
-#include "display_mirror.h"
-#include "pindefs.h"
+#include "../include/drone_spoofer.h"
+#include "../include/display_mirror.h"
+#include "../include/pindefs.h"
 #include <U8g2lib.h>
 #include <Arduino.h>
 #include "esp_wifi.h"
 #include "esp_bt.h"
 #include "esp_gap_ble_api.h"
 #include "esp_bt_main.h"
-#include "radio_manager.h"
+#include "../include/radio_manager.h"
 #include <cstring>
 
 extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2;

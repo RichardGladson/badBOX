@@ -9,7 +9,7 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "display_mirror.h"
+#include "../include/display_mirror.h"
 #include <Arduino.h>
 
 static bool mirrorEnabled = false;

@@ -14,7 +14,7 @@
 
 #include <U8g2lib.h>
 #include <Arduino.h>
-#include "pindefs.h"
+#include "../include/pindefs.h"
 
 void deviceScoutSetup();
 void deviceScoutLoop();

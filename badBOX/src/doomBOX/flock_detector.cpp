@@ -9,16 +9,16 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "flock_detector.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "setting.h"
+#include "../include/flock_detector.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/setting.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_bt.h"
 #include "esp_gap_ble_api.h"
 #include "esp_bt_main.h"
-#include "radio_manager.h"
+#include "../include/radio_manager.h"
 #include <vector>
 
 extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2;

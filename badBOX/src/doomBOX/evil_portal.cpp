@@ -9,12 +9,12 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "evil_portal.h"
-#include "radio_manager.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "pindefs.h"
-#include "setting.h"
+#include "../include/evil_portal.h"
+#include "../include/radio_manager.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/pindefs.h"
+#include "../include/setting.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_netif.h"

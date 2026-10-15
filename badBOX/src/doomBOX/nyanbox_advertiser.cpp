@@ -9,9 +9,9 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "nyanbox_advertiser.h"
-#include "radio_manager.h"
-#include "nyanbox_common.h"
+#include "../include/nyanbox_advertiser.h"
+#include "../include/radio_manager.h"
+#include "../include/nyanbox_common.h"
 #include "esp_bt.h"
 #include "esp_gap_ble_api.h"
 #include "esp_bt_main.h"

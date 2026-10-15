@@ -9,8 +9,8 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "radio_manager.h"
-#include "pindefs.h"
+#include "../include/radio_manager.h"
+#include "../include/pindefs.h"
 
 #include "esp_wifi.h"
 #include "esp_netif.h"

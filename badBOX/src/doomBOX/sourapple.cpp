@@ -9,9 +9,9 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "sourapple.h"
-#include "radio_manager.h"
-#include "display_mirror.h"
+#include "../include/sourapple.h"
+#include "../include/radio_manager.h"
+#include "../include/display_mirror.h"
 #include "esp_bt.h"
 #include "esp_gap_ble_api.h"
 #include "esp_bt_main.h"

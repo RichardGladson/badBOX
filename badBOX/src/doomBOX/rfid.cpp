@@ -24,14 +24,14 @@
       - XP awards via level_system
 */
 
-#include "rfid.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "level_system.h"
-#include "neopixel.h"
-#include "setting.h"
-#include "radio_manager.h"
-#include "pindefs.h"
+#include "../include/rfid.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/level_system.h"
+#include "../include/neopixel.h"
+#include "../include/setting.h"
+#include "../include/radio_manager.h"
+#include "../include/pindefs.h"
 
 #include <SPI.h>
 #include <MFRC522.h>

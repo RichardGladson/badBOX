@@ -2,7 +2,7 @@
  * CORE-side ESP-NOW manager implementation
  */
 
-#include "reaper_manager.h"
+#include "../include/reaper_manager.h"
 #include <string.h>
 
 #define CORE_BEACON_INTERVAL_MS     1000

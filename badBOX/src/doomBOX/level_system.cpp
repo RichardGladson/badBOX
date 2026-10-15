@@ -11,10 +11,10 @@
 
 #include <EEPROM.h>
 #include <U8g2lib.h>
-#include "level_system.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "pindefs.h"
+#include "../include/level_system.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/pindefs.h"
 
 extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2;
 

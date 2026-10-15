@@ -9,11 +9,11 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "pindefs.h"
-#include "swiftpair.h"
-#include "radio_manager.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
+#include "../include/pindefs.h"
+#include "../include/swiftpair.h"
+#include "../include/radio_manager.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
 #include <U8g2lib.h>
 #include <Arduino.h>
 #include "esp_bt.h"

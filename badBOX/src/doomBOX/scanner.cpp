@@ -10,11 +10,11 @@
 */
 
 #include <Arduino.h>
-#include "scanner.h"
-#include "radio_manager.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "pindefs.h"
+#include "../include/scanner.h"
+#include "../include/radio_manager.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/pindefs.h"
 #include <esp_bt_main.h>
 
 extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2;

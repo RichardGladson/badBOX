@@ -10,13 +10,13 @@
 */
 
 #include <Arduino.h>
-#include "sigkill.h"
-#include "radio_manager.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "icon.h"
-#include "pindefs.h"
-#include "level_system.h"
+#include "../include/sigkill.h"
+#include "../include/radio_manager.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/icon.h"
+#include "../include/pindefs.h"
+#include "../include/level_system.h"
 #include <esp_bt_main.h>
 
 extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2;

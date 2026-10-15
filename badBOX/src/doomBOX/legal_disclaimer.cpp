@@ -11,10 +11,10 @@
 
 #include <Arduino.h>
 #include <U8g2lib.h>
-#include "legal_disclaimer.h"
-#include "sleep_manager.h"
-#include "display_mirror.h"
-#include "pindefs.h"
+#include "../include/legal_disclaimer.h"
+#include "../include/sleep_manager.h"
+#include "../include/display_mirror.h"
+#include "../include/pindefs.h"
 
 extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2;
 
