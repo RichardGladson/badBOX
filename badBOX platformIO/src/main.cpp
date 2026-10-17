@@ -33,6 +33,7 @@
 // doomBOX feature headers (existing project files)
 #include "../include/icon.h"
 #include "../include/doombox_logo.h"
+#include "flipBOX_logo.h"
 #include "../include/neopixel.h"
 #include "../include/setting.h"
 #include "../include/sourapple.h"
@@ -2130,6 +2131,43 @@ void doomboxLoop() {
 // ============================================================================
 
 // ============================================================================
+
+// flipBOX boot cutscene (same structure as doomBOX: RG → presents → product logo)
+static bool flipboxCutsceneDone = false;
+
+static void playFlipboxCutscene() {
+  if (flipboxCutsceneDone) return;
+  flipboxCutsceneDone = true;
+
+  // Scene 1: RG logo
+  u8g2.clearBuffer();
+  u8g2.drawBitmap(0, 0, 16, 64, logo_doombox);
+  u8g2.sendBuffer();
+  delay(2000);
+
+  // Scene 2: "presents"
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_helvR08_tr);
+  {
+    const char* p = "presents";
+    int16_t pw = u8g2.getUTF8Width(p);
+    u8g2.setCursor((128 - pw) / 2, 34);
+    u8g2.print(p);
+  }
+  u8g2.sendBuffer();
+  delay(1500);
+
+  // Scene 3: flipBOX wordmark (100x31, 13 bytes/row), centered
+  u8g2.clearBuffer();
+  {
+    const int x = (128 - FLIPBOX_W) / 2;
+    const int y = (64 - FLIPBOX_H) / 2;
+    u8g2.drawBitmap(x, y, FLIPBOX_ROW_BYTES, FLIPBOX_H, flipBOX_logo);
+  }
+  u8g2.sendBuffer();
+  delay(2000);
+}
+
 void setup() {
   Serial.begin(115200);
   inputInit();
@@ -2175,6 +2213,16 @@ void setup() {
   if (gSystemMode == SYS_DOOMBOX) {
     enterDoomboxMode();
   } else {
+    // Suspend async flush for blocking cutscene frames (same as doomBOX path)
+#if FB_ASYNC_DISPLAY
+    if (gFlushDone) xSemaphoreTake(gFlushDone, portMAX_DELAY);
+    if (gFlushTaskHandle) vTaskSuspend(gFlushTaskHandle);
+#endif
+    playFlipboxCutscene();
+#if FB_ASYNC_DISPLAY
+    if (gFlushTaskHandle) vTaskResume(gFlushTaskHandle);
+    if (gFlushDone) xSemaphoreGive(gFlushDone);
+#endif
     if (gCfg.passwordOn) {
       gMode = UI_PASSWORD;
       gPwdIdx = 0;
