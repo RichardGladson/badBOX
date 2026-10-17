@@ -623,47 +623,108 @@ void drawHoldBar(uint8_t progress /*0-100*/, int y = 60) {
 }
 
 // ============================================================================
-// 11. TROLL MODE OVERLAY  (“virus” visual noise)
+// 11. TROLL MODE OVERLAY — realistic digital glitch (boxes, lines, binary)
 // ============================================================================
+// Frame-timed flicker: intensity changes every few frames so it feels alive
+static uint8_t  gGlitchPhase  = 0;
+static uint32_t gGlitchLastMs = 0;
+
 void applyTrollOverlay() {
   if (!gCfg.troll) return;
 
-  // Random horizontal / vertical cracks
-  for (int i = 0; i < 6; ++i) {
-    int x0 = (int)(rnd() % 128);
-    int y0 = (int)(rnd() % 64);
-    int len = 8 + (int)(rnd() % 24);
-    if (rnd() & 1) {
-      gDisp.drawHLine(x0, y0, len);
-    } else {
-      gDisp.drawVLine(x0, y0, len);
+  const uint32_t now = millis();
+  // Advance phase ~12–20 Hz so flicker reads as real corruption, not static art
+  if (now - gGlitchLastMs >= 50 + (rnd() % 40)) {
+    gGlitchLastMs = now;
+    gGlitchPhase++;
+    // Reseed occasionally so patterns don't loop visibly
+    if ((gGlitchPhase & 7) == 0) gRng ^= now;
+  }
+
+  u8g2.setDrawColor(1);
+  u8g2.setFont(u8g2_font_4x6_tr);
+  u8g2.setFontMode(1);
+
+  // --- 1) Full-frame blackout / invert flash (rare) ---
+  if ((gGlitchPhase & 0x1F) == 0 && (rnd() & 3) == 0) {
+    u8g2.drawBox(0, 0, 128, 64);
+    return;  // pure flash frame
+  }
+  if ((gGlitchPhase & 0x0F) == 3 && (rnd() & 7) == 0) {
+    // partial screen wipe
+    int y = (int)(rnd() % 48);
+    int h = 8 + (int)(rnd() % 24);
+    u8g2.drawBox(0, y, 128, h);
+  }
+
+  // --- 2) Solid rectangular blocks (tearing / block noise) ---
+  const int nBlocks = 2 + (int)(rnd() % 5);
+  for (int i = 0; i < nBlocks; ++i) {
+    int w = 4 + (int)(rnd() % 40);
+    int h = 2 + (int)(rnd() % 14);
+    int x = (int)(rnd() % (128 - w + 1));
+    int y = (int)(rnd() % (64 - h + 1));
+    if (rnd() & 1)
+      u8g2.drawBox(x, y, w, h);
+    else
+      u8g2.drawFrame(x, y, w, h);
+  }
+
+  // --- 3) Hard horizontal tear lines (1–3 px tall bands) ---
+  const int nH = 2 + (int)(rnd() % 4);
+  for (int i = 0; i < nH; ++i) {
+    int y = (int)(rnd() % 64);
+    int h = 1 + (int)(rnd() % 3);
+    int x0 = (int)(rnd() % 32);
+    int w  = 64 + (int)(rnd() % (128 - x0));
+    for (int dy = 0; dy < h; ++dy) {
+      if (y + dy < 64) u8g2.drawHLine(x0, y + dy, w);
     }
   }
 
-  // Scattered blobs / “flakes”
-  for (int i = 0; i < 12; ++i) {
+  // --- 4) Vertical slice lines ---
+  const int nV = 1 + (int)(rnd() % 3);
+  for (int i = 0; i < nV; ++i) {
     int x = (int)(rnd() % 128);
-    int y = (int)(rnd() % 64);
-    int r = 1 + (int)(rnd() % 3);
-    if (rnd() & 1) gDisp.drawDisc(x, y, r);
-    else           gDisp.drawCircle(x, y, r);
+    int y0 = (int)(rnd() % 32);
+    int h = 16 + (int)(rnd() % 48);
+    u8g2.drawVLine(x, y0, h);
+    if ((rnd() & 1) && x + 1 < 128) u8g2.drawVLine(x + 1, y0, h);
   }
 
-  // Occasional full-width glitch lines
-  if ((rnd() & 0x1F) < 4) {
-    int y = (int)(rnd() % 64);
-    gDisp.drawHLine(0, y, 128);
-    if (y + 1 < 64) gDisp.drawHLine(0, y + 1, 128);
+  // --- 5) Binary / garbage text strings ---
+  const int nStr = 1 + (int)(rnd() % 4);
+  char buf[18];
+  for (int s = 0; s < nStr; ++s) {
+    const int len = 4 + (int)(rnd() % 12);
+    for (int c = 0; c < len && c < 17; ++c)
+      buf[c] = (rnd() & 1) ? '1' : '0';
+    buf[len < 17 ? len : 17] = 0;
+    int tx = (int)(rnd() % 100);
+    int ty = 6 + (int)(rnd() % 58);
+    u8g2.drawStr(tx, ty, buf);
   }
 
-  // Soft “blur” by random pixel inversion in a few bands
-  for (int b = 0; b < 3; ++b) {
-    int y = (int)(rnd() % 56);
-    for (int x = 0; x < 128; x += 2 + (int)(rnd() % 3)) {
-      // invert a single pixel (read-modify via draw)
-      // U8g2 has no getPixel, so we just sprinkle extra noise
-      gDisp.drawPixel(x, y + (int)(rnd() % 8));
-    }
+  // Occasional short hex-looking garbage
+  if ((rnd() & 3) == 0) {
+    static const char hexc[] = "0123456789ABCDEF";
+    char hx[9];
+    for (int i = 0; i < 8; ++i) hx[i] = hexc[rnd() % 16];
+    hx[8] = 0;
+    u8g2.drawStr((int)(rnd() % 90), 6 + (int)(rnd() % 58), hx);
+  }
+
+  // --- 6) Fine static: sparse single pixels ---
+  const int nPix = 8 + (int)(rnd() % 20);
+  for (int i = 0; i < nPix; ++i)
+    u8g2.drawPixel((int)(rnd() % 128), (int)(rnd() % 64));
+
+  // --- 7) Scanline flicker: every other line in a band ---
+  if ((gGlitchPhase & 3) == 1) {
+    int y0 = (int)(rnd() % 50);
+    int h  = 6 + (int)(rnd() % 14);
+    for (int y = y0; y < y0 + h && y < 64; y += 2)
+      u8g2.drawHLine(0, y, 128);
   }
 }
 
@@ -1757,9 +1818,92 @@ void drawSelection(int x, int y, int w, int h, bool) {
 }
 
 void applyDoomTrollOverlay() {
-  if (!trollModeEnabled) return;
-  for (int i = 0; i < 6; i++)
-    u8g2.drawPixel((int)(esp_random() % 128), (int)(esp_random() % 64));
+  if (!trollModeEnabled && !gCfg.troll) return;
+
+  const uint32_t now = millis();
+  static uint8_t  phase = 0;
+  static uint32_t lastMs = 0;
+  // local xorshift
+  static uint32_t r = 0xC0FFEEu;
+  auto rr = [&]() -> uint32_t {
+    r ^= r << 13; r ^= r >> 17; r ^= r << 5; return r;
+  };
+  if (now - lastMs >= 50 + (rr() % 40)) {
+    lastMs = now;
+    phase++;
+    if ((phase & 7) == 0) r ^= now;
+  }
+
+  u8g2.setDrawColor(1);
+  u8g2.setFont(u8g2_font_4x6_tr);
+  u8g2.setFontMode(1);
+
+  if ((phase & 0x1F) == 0 && (rr() & 3) == 0) {
+    u8g2.drawBox(0, 0, 128, 64);
+    return;
+  }
+  if ((phase & 0x0F) == 3 && (rr() & 7) == 0) {
+    int y = (int)(rr() % 48);
+    int h = 8 + (int)(rr() % 24);
+    u8g2.drawBox(0, y, 128, h);
+  }
+
+  const int nBlocks = 2 + (int)(rr() % 5);
+  for (int i = 0; i < nBlocks; ++i) {
+    int w = 4 + (int)(rr() % 40);
+    int h = 2 + (int)(rr() % 14);
+    int x = (int)(rr() % (128 - w + 1));
+    int y = (int)(rr() % (64 - h + 1));
+    if (rr() & 1) u8g2.drawBox(x, y, w, h);
+    else          u8g2.drawFrame(x, y, w, h);
+  }
+
+  const int nH = 2 + (int)(rr() % 4);
+  for (int i = 0; i < nH; ++i) {
+    int y = (int)(rr() % 64);
+    int h = 1 + (int)(rr() % 3);
+    int x0 = (int)(rr() % 32);
+    int w  = 64 + (int)(rr() % (128 - x0));
+    for (int dy = 0; dy < h; ++dy)
+      if (y + dy < 64) u8g2.drawHLine(x0, y + dy, w);
+  }
+
+  const int nV = 1 + (int)(rr() % 3);
+  for (int i = 0; i < nV; ++i) {
+    int x = (int)(rr() % 128);
+    int y0 = (int)(rr() % 32);
+    int ht = 16 + (int)(rr() % 48);
+    u8g2.drawVLine(x, y0, ht);
+    if ((rr() & 1) && x + 1 < 128) u8g2.drawVLine(x + 1, y0, ht);
+  }
+
+  const int nStr = 1 + (int)(rr() % 4);
+  char buf[18];
+  for (int s = 0; s < nStr; ++s) {
+    const int len = 4 + (int)(rr() % 12);
+    for (int c = 0; c < len && c < 17; ++c)
+      buf[c] = (rr() & 1) ? '1' : '0';
+    buf[len < 17 ? len : 17] = 0;
+    u8g2.drawStr((int)(rr() % 100), 6 + (int)(rr() % 58), buf);
+  }
+  if ((rr() & 3) == 0) {
+    static const char hexc[] = "0123456789ABCDEF";
+    char hx[9];
+    for (int i = 0; i < 8; ++i) hx[i] = hexc[rr() % 16];
+    hx[8] = 0;
+    u8g2.drawStr((int)(rr() % 90), 6 + (int)(rr() % 58), hx);
+  }
+
+  const int nPix = 8 + (int)(rr() % 20);
+  for (int i = 0; i < nPix; ++i)
+    u8g2.drawPixel((int)(rr() % 128), (int)(rr() % 64));
+
+  if ((phase & 3) == 1) {
+    int y0 = (int)(rr() % 50);
+    int h  = 6 + (int)(rr() % 14);
+    for (int y = y0; y < y0 + h && y < 64; y += 2)
+      u8g2.drawHLine(0, y, 128);
+  }
 }
 
 void enterDoomboxMode() {
