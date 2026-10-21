@@ -1,3 +1,14 @@
+/*
+    badBOX by Richard Gladson
+    https://github.com/RichardGladson/badBOX
+    Copyright (c) 2026 Richard Gladson
+
+    Licensed under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.html
+
+    SPDX-License-Identifier: GPL-3.0-only
+*/
+
 // src/2fast2furious.cpp  --  2 Fast 2 Furious  (flipBOX)
 //
 // Pseudo-3D drift racer for the 128x64 monochrome OLED.

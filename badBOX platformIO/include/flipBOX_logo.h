@@ -1,3 +1,14 @@
+/*
+    badBOX by Richard Gladson
+    https://github.com/RichardGladson/badBOX
+    Copyright (c) 2026 Richard Gladson
+
+    Licensed under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.html
+
+    SPDX-License-Identifier: GPL-3.0-only
+*/
+
 // flipBOX wordmark, 100x31 px, 1 bit per pixel.
 // Format: row-major, MSB first, each row padded to a whole byte (13 bytes/row).
 // 1 = lit pixel. This is the layout Adafruit_GFX::drawBitmap() expects.

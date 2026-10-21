@@ -1,15 +1,12 @@
 /*
-    nyanBOX by Nyan Devices
-    https://github.com/jbohack/nyanBOX
-    Copyright (c) 2025 jbohack
+    badBOX by Richard Gladson
+    https://github.com/RichardGladson/badBOX
+    Copyright (c) 2026 Richard Gladson
 
-    Open Drone ID (ODID) Remote ID spoofing
-    per the ASTM F3411 / ASD-STAN prEN 4709-002 spec
+    Licensed under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.html
 
-    Licensed under the MIT License
-    https://opensource.org/licenses/MIT
-
-    SPDX-License-Identifier: MIT
+    SPDX-License-Identifier: GPL-3.0-only
 */
 
 #include "../include/drone_spoofer.h"

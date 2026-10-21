@@ -1,4 +1,15 @@
 /*
+    badBOX by Richard Gladson
+    https://github.com/RichardGladson/badBOX
+    Copyright (c) 2026 Richard Gladson
+
+    Licensed under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.html
+
+    SPDX-License-Identifier: GPL-3.0-only
+*/
+
+/*
  * ============================================================================
  *  Unified OS — flipBOX + doomBOX
  *  Single main.cpp: one setup()/loop(), one display object, two subsystems.
